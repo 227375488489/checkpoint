@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Донат - Модовая Анархия</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8B5FBF;
+            --primary-light: #9E7BC9;
+            --primary-dark: #6A4B8D;
+            --accent: #C77DFF;
+            --accent-light: #D6A6FF;
+            --white: #FFFFFF;
+            --light: #F8F7FF;
+            --dark: #2D2B3A;
+            --gray: #6C757D;
+            --gradient: linear-gradient(135deg, var(--primary), var(--accent));
+            --gradient-light: linear-gradient(135deg, var(--primary-light), var(--accent-light));
+            --gradient-dark: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            --shadow: 0 10px 30px rgba(139, 95, 191, 0.2);
+            --shadow-dark: 0 15px 40px rgba(139, 95, 191, 0.3);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #f5f7fa 0%, #f8f7ff 100%);
+            position: relative;
+        }
+
+        /* Анимированный фон */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--gradient-light);
+            opacity: 0.1;
+            animation: float 15s ease-in-out infinite;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            left: -150px;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            top: 20%;
+            left: 80%;
+            animation-delay: 3s;
+        }
+
+        .shape-3 {
+            width: 150px;
+            height: 150px;
+            top: 70%;
+            left: 10%;
+            animation-delay: 6s;
+        }
+
+        .shape-4 {
+            width: 250px;
+            height: 250px;
+            top: 60%;
+            left: 70%;
+            animation-delay: 9s;
+        }
+
+        .shape-5 {
+            width: 180px;
+            height: 180px;
+            top: 10%;
+            left: 20%;
+            animation-delay: 12s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            33% { transform: translateY(-20px) rotate(5deg) scale(1.05); }
+            66% { transform: translateY(10px) rotate(-5deg) scale(0.95); }
+        }
+
+        /* Навигация */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            padding: 0.7rem 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 20px;
+            font-weight: bold;
+            transform: rotate(-5deg);
+            transition: var(--transition);
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(0deg) scale(1.1);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .logo:hover .logo-text {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            position: relative;
+            padding: 5px 0;
+            transition: var(--transition);
+        }
+
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--gradient);
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .nav-links a.active:after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-dark);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+
+        .btn-large {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Основной контент */
+        .donate-main {
+            padding: 120px 0 50px;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 12px 24px;
+            border-radius: 50px;
+            background: var(--white);
+            border: 2px solid var(--primary-light);
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .category-btn.active, .category-btn:hover {
+            background: var(--gradient);
+            color: var(--white);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-dark);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--gradient);
+            color: var(--white);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        .product-header {
+            padding: 2rem;
+            background: var(--gradient);
+            color: var(--white);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .product-name {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .product-price {
+            font-size: 2rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .product-price::before {
+            content: '€';
+            font-size: 1.2rem;
+            margin-right: 5px;
+        }
+
+        .product-body {
+            padding: 2rem;
+        }
+
+        .product-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .product-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .product-features li:last-child {
+            border-bottom: none;
+        }
+
+        .product-features i {
+            color: var(--primary);
+        }
+
+        .currency-amount {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 10px;
+        }
+
+        .currency-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .currency-name {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .currency-price {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .currency-total {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+
+        /* Футер */
+        footer {
+            background: var(--dark);
+            color: var(--white);
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+            padding-left: 5px;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+        }
+
+        /* Мобильное меню */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            background: var(--white);
+            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+            padding: 2rem;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mobile-menu-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .mobile-menu-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 1.2rem;
+            padding: 10px 0;
+            display: block;
+            border-bottom: 1px solid var(--light);
+        }
+
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 992px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .categories {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Анимированный фон -->
+<div class="bg-animation">
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+    <div class="bg-shape shape-4"></div>
+    <div class="bg-shape shape-5"></div>
+</div>
+
+<!-- Навигация -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-flag"></i>
+            </div>
+            <div class="logo-text">CheckPoint</div>
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Главная</a></li>
+            <li><a href="donate.html" class="active">Донат</a></li>
+            <li><a href="download.html">Скачать</a></li>
+            <li><a href="help.html">Помощь</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <a href="donate.html" class="btn btn-primary">
+                <i class="fas fa-shopping-cart"></i> Купить донат
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Мобильное меню -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+<div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-header">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-gamepad"></i>
+            </div>
+            <div class="logo-text">Модовая Анархия</div>
+        </div>
+        <button class="mobile-menu-btn" id="mobileMenuClose">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <ul class="mobile-menu-links">
+        <li><a href="index.html">Главная</a></li>
+        <li><a href="donate.html">Донат</a></li>
+        <li><a href="download.html">Скачать</a></li>
+        <li><a href="help.html">Помощь</a></li>
+    </ul>
+
+    <div class="mobile-menu-actions">
+        <a href="donate.html" class="btn btn-primary btn-block">
+            <i class="fas fa-shopping-cart"></i> Купить донат
+        </a>
+    </div>
+</div>
+
+<!-- Основной контент -->
+<main class="donate-main">
+    <div class="container">
+        <div class="page-header">
+            <h1>Магазин доната</h1>
+            <p>Приобретите привилегии и улучшите свой игровой опыт на сервере Модовая Анархия</p>
+        </div>
+
+        <div class="categories">
+            <button class="category-btn active" data-category="all">Все товары</button>
+            <button class="category-btn" data-category="ranks">Привилегии</button>
+            <button class="category-btn" data-category="currency">Валюта</button>
+            <button class="category-btn" data-category="cases">Кейсы</button>
+        </div>
+
+        <div class="products-grid">
+            <!-- Ранг 1 -->
+            <div class="product-card" data-category="ranks">
+                <div class="product-badge">Хит</div>
+                <div class="product-header">
+                    <h3 class="product-name">Стартер</h3>
+                    <div class="product-price">0.99</div>
+                </div>
+                <div class="product-body">
+                    <ul class="product-features">
+                        <li><i class="fas fa-check"></i> Префикс в чате</li>
+                        <li><i class="fas fa-check"></i> Доступ к /hat и /ptime</li>
+                        <li><i class="fas fa-check"></i> Цветной ник</li>
+                        <li><i class="fas fa-check"></i> 3 слота на аукцион</li>
+                    </ul>
+                    <a href="https://funpay.com/lots/offer?id=55054014" class="btn btn-primary btn-block" target="_blank">
+                        <i class="fas fa-shopping-cart"></i> Купить за €0.99
+                    </a>
+                </div>
+            </div>
+
+            <!-- Ранг 2 -->
+            <div class="product-card" data-category="ranks">
+                <div class="product-badge">Популярный</div>
+                <div class="product-header">
+                    <h3 class="product-name">Игрок</h3>
+                    <div class="product-price">1.99</div>
+                </div>
+                <div class="product-body">
+                    <ul class="product-features">
+                        <li><i class="fas fa-check"></i> Все преимущества Стартера</li>
+                        <li><i class="fas fa-check"></i> Доступ к /fly</li>
+                        <li><i class="fas fa-check"></i> Возможность телепортации</li>
+                        <li><i class="fas fa-check"></i> 5 слотов на аукцион</li>
+                    </ul>
+                    <a href="https://funpay.com/lots/offer?id=55054026" class="btn btn-primary btn-block" target="_blank">
+                        <i class="fas fa-shopping-cart"></i> Купить за €1.99
+                    </a>
+                </div>
+            </div>
+
+            <!-- Ранг 3 -->
+            <div class="product-card" data-category="ranks">
+                <div class="product-header">
+                    <h3 class="product-name">Хелпер</h3>
+                    <div class="product-price">3.49</div>
+                </div>
+                <div class="product-body">
+                    <ul class="product-features">
+                        <li><i class="fas fa-check"></i> Все преимущества Игрока</li>
+                        <li><i class="fas fa-check"></i> Доступ к /ec и /craft</li>
+                        <li><i class="fas fa-check"></i> Возможность создавать варпы</li>
+                        <li><i class="fas fa-check"></i> 10 слотов на аукцион</li>
+                    </ul>
+                    <a href="https://funpay.com/lots/offer?id=55054038" class="btn btn-primary btn-block" target="_blank">
+                        <i class="fas fa-shopping-cart"></i> Купить за €3.49
+                    </a>
+                </div>
+            </div>
+
+            <!-- Ранг 4 -->
+            <div class="product-card" data-category="ranks">
+                <div class="product-header">
+                    <h3 class="product-name">Модератор</h3>
+                    <div class="product-price">4.99</div>
+                </div>
+                <div class="product-body">
+                    <ul class="product-features">
+                        <li><i class="fas fa-check"></i> Все преимущества Хелпера</li>
+                        <li><i class="fas fa-check"></i> Доступ к /feed и /heal</li>
+                        <li><i class="fas fa-check"></i> Ускоренная добыча ресурсов</li>
+                        <li><i class="fas fa-check"></i> 15 слотов на аукцион</li>
+                    </ul>
+                    <a href="https://funpay.com/lots/offer?id=55054045" class="btn btn-primary btn-block" target="_blank">
+                        <i class="fas fa-shopping-cart"></i> Купить за €4.99
+                    </a>
+                </div>
+            </div>
+
+            <!-- Ранг 5 -->
+            <div class="product-card" data-category="ranks">
+                <div class="product-badge">Эксклюзив</div>
+                <div class="product-header">
+                    <h3 class="product-name">Администратор</h3>
+                    <div class="product-price">7.99</div>
+                </div>
+                <div class="product-body">
+                    <ul class="product-features">
+                        <li><i class="fas fa-check"></i> Все преимущества Модератора</li>
+                        <li><i class="fas fa-check"></i> Доступ к /vanish</li>
+                        <li><i class="fas fa-check"></i> Уникальные способности</li>
+                        <li><i class="fas fa-check"></i> 25 слотов на аукцион</li>
+                    </ul>
+                    <a href="https://funpay.com/lots/offer?id=55054057" class="btn btn-primary btn-block" target="_blank">
+                        <i class="fas fa-shopping-cart"></i> Купить за €7.99
+                    </a>
+                </div>
+            </div>
+
+            <!-- Ранг 6 -->
+            <div class="product-card" data-category="ranks">
+                <div class="product-badge">Легендарный</div>
+                <div class="product-header">
+                    <h3 class="product-name">Владелец</h3>
+                    <div class="product-price">12.99</div>
+                </div>
+                <div class="product-body">
+                    <ul class="product-features">
+                        <li><i class="fas fa-check"></i> Все преимущества Администратора</li>
+                        <li><i class="fas fa-check"></i> Полный доступ ко всем командам</li>
+                        <li><i class="fas fa-check"></i> Эксклюзивные возможности</li>
+                        <li><i class="fas fa-check"></i> Неограниченные слоты на аукцион</li>
+                    </ul>
+                    <a href="https://funpay.com/lots/offer?id=55054062" class="btn btn-primary btn-block" target="_blank">
+                        <i class="fas fa-shopping-cart"></i> Купить за €12.99
+                    </a>
+                </div>
+            </div>
+
+            <!-- Валюта -->
+            <div class="product-card" data-category="currency">
+                <div class="product-badge">Валюта</div>
+                <div class="product-header">
+                    <h3 class="product-name">Игровая валюта</h3>
+                    <div class="product-price">0.11</div>
+                </div>
+                <div class="product-body">
+                    <div class="currency-amount">
+                        <div class="currency-info">
+                            <span class="currency-name">1000 монет</span>
+                            <span class="currency-price">€0.11 за 1000 монет</span>
+                        </div>
+                        <div class="currency-total">€0.11</div>
+                    </div>
+                    <div class="currency-amount">
+                        <div class="currency-info">
+                            <span class="currency-name">10000 монет</span>
+                            <span class="currency-price">€0.99 за 10000 монет</span>
+                        </div>
+                        <div class="currency-total">€0.99</div>
+                    </div>
+                    <div class="currency-amount">
+                        <div class="currency-info">
+                            <span class="currency-name">100000 монет</span>
+                            <span class="currency-price">€7.99 за 10000 монет</span>
+                        </div>
+                        <div class="currency-total">€7.99</div>
+                    </div>
+                    <a href="https://funpay.com/lots/offer?id=55087718" class="btn btn-primary btn-block" target="_blank">
+                        <i class="fas fa-shopping-cart"></i> Купить валюту
+                    </a>
+                </div>
+            </div>
+
+            <!-- Кейс 1 -->
+            <div class="product-card" data-category="cases">
+                <div class="product-header">
+                    <h3 class="product-name">Обычный Кейс</h3>
+                    <div class="product-price">0.29</div>
+                </div>
+                <div class="product-body">
+                    <ul class="product-features">
+                        <li><i class="fas fa-check"></i> Шанс выпадения редких предметов</li>
+                        <li><i class="fas fa-check"></i> Уникальные скины</li>
+                        <li><i class="fas fa-check"></i> Эксклюзивные способности</li>
+                        <li><i class="fas fa-check"></i> Ограниченное предложение</li>
+                    </ul>
+                    <a href="https://funpay.com/lots/offer?id=55086001" class="btn btn-primary btn-block" target="_blank">
+                        <i class="fas fa-shopping-cart"></i> Купить за €0.29
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Кейс 2 -->
+            <div class="product-card" data-category="cases">
+                <div class="product-header">
+                    <h3 class="product-name">Обычный Кейс</h3>
+                    <div class="product-price">0.79</div>
+                </div>
+                <div class="product-body">
+                    <ul class="product-features">
+                        <li><i class="fas fa-check"></i> Шанс выпадения редких предметов</li>
+                        <li><i class="fas fa-check"></i> Уникальные скины</li>
+                        <li><i class="fas fa-check"></i> Эксклюзивные способности</li>
+                        <li><i class="fas fa-check"></i> Ограниченное предложение</li>
+                    </ul>
+                    <a href="https://funpay.com/lots/offer?id=55086015" class="btn btn-primary btn-block" target="_blank">
+                        <i class="fas fa-shopping-cart"></i> Купить за €0.79
+                    </a>
+                </div>
+            </div>
+            
+             <!-- Кейс 3 -->
+            <div class="product-card" data-category="cases">
+                <div class="product-header">
+                    <h3 class="product-name">Обычный Кейс</h3>
+                    <div class="product-price">1.49</div>
+                </div>
+                <div class="product-body">
+                    <ul class="product-features">
+                        <li><i class="fas fa-check"></i> Шанс выпадения редких предметов</li>
+                        <li><i class="fas fa-check"></i> Уникальные скины</li>
+                        <li><i class="fas fa-check"></i> Эксклюзивные способности</li>
+                        <li><i class="fas fa-check"></i> Ограниченное предложение</li>
+                    </ul>
+                    <a href="https://funpay.com/lots/offer?id=55086042" class="btn btn-primary btn-block" target="_blank">
+                        <i class="fas fa-shopping-cart"></i> Купить за €1.49
+                    </a>
+                </div>
+            </div>
+            <!-- Кейс 4 -->
+            <div class="product-card" data-category="cases">
+                <div class="product-badge">Новый</div>
+                <div class="product-header">
+                    <h3 class="product-name">Редкий Кейс</h3>
+                    <div class="product-price">2.99</div>
+                </div>
+                <div class="product-body">
+                    <ul class="product-features">
+                        <li><i class="fas fa-check"></i> Увеличенный шанс на редкие предметы</li>
+                        <li><i class="fas fa-check"></i> Эксклюзивные скины</li>
+                        <li><i class="fas fa-check"></i> Уникальные способности</li>
+                        <li><i class="fas fa-check"></i> Ограниченное предложение</li>
+                    </ul>
+                    <a href="https://funpay.com/lots/offer?id=55086071" class="btn btn-primary btn-block" target="_blank">
+                        <i class="fas fa-shopping-cart"></i> Купить за €2.99
+                    </a>
+                </div>
+            </div>
+
+            <!-- Кейс 5 -->
+            <div class="product-card" data-category="cases">
+                <div class="product-badge">Эксклюзив</div>
+                <div class="product-header">
+                    <h3 class="product-name">Легендарный Кейс</h3>
+                    <div class="product-price">5.99</div>
+                </div>
+                <div class="product-body">
+                    <ul class="product-features">
+                        <li><i class="fas fa-check"></i> Гарантированный легендарный предмет</li>
+                        <li><i class="fas fa-check"></i> Уникальные скины</li>
+                        <li><i class="fas fa-check"></i> Эксклюзивные способности</li>
+                        <li><i class="fas fa-check"></i> Ограниченное предложение</li>
+                    </ul>
+                    <a href="https://funpay.com/lots/offer?id=55086089" class="btn btn-primary btn-block" target="_blank">
+                        <i class="fas fa-shopping-cart"></i> Купить за €5.99
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Футер -->
+<footer>
+    <div class="footer-content">
+        <div class="footer-column">
+            <h3>Модовая Анархия</h3>
+            <p>Лучший Minecraft сервер с модами. Присоединяйся к нам и открой новый уровень игры!</p>
+        </div>
+
+        <div class="footer-column">
+            <h3>Навигация</h3>
+            <ul class="footer-links">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="donate.html">Донат</a></li>
+                <li><a href="download.html">Скачать сборку</a></li>
+                <li><a href="help.html">Помощь</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <h3>Сервер</h3>
+            <ul class="footer-links">
+                <li><i class="fas fa-server"></i> mc.mod-anarchy.com</li>
+                <li><i class="fas fa-globe"></i> Версия: 1.20.1</li>
+                <li><i class="fas fa-download"></i> Сборка: Модовая Анархия v2.1</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="copyright">
+        <p>© 2023 Модовая Анархия Minecraft Server. Все права защищены.</p>
+    </div>
+</footer>
+
+<script>
+    // Фильтрация товаров по категориям
+    document.querySelectorAll('.category-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            // Убрать активный класс у всех кнопок
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Добавить активный класс текущей кнопке
+            this.classList.add('active');
+
+            const category = this.getAttribute('data-category');
+            const products = document.querySelectorAll('.product-card');
+
+            products.forEach((product, index) => {
+                if (category === 'all' || product.getAttribute('data-category').includes(category)) {
+                    product.style.display = 'block';
+                    product.style.animationDelay = `${index * 0.1}s`;
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Анимация появления товаров
+    const productObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }, index * 100);
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+
+    document.querySelectorAll('.product-card').forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.1}s`;
+        productObserver.observe(card);
+    });
+
+    // Мобильное меню
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenuClose = document.getElementById('mobileMenuClose');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+
+    function openMobileMenu() {
+        mobileMenu.classList.add('active');
+        mobileMenuOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileMenu() {
+        mobileMenu.classList.remove('active');
+        mobileMenuOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    mobileMenuBtn.addEventListener('click', openMobileMenu);
+    mobileMenuClose.addEventListener('click', closeMobileMenu);
+    mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+
+    // Изменение навигации при прокрутке
+    window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+</script>
+</body>
+</html>

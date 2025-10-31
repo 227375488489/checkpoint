@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Модовая Анархия - Minecraft сервер</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8B5FBF;
+            --primary-light: #9E7BC9;
+            --primary-dark: #6A4B8D;
+            --accent: #C77DFF;
+            --accent-light: #D6A6FF;
+            --white: #FFFFFF;
+            --light: #F8F7FF;
+            --dark: #2D2B3A;
+            --gray: #6C757D;
+            --gradient: linear-gradient(135deg, var(--primary), var(--accent));
+            --gradient-light: linear-gradient(135deg, var(--primary-light), var(--accent-light));
+            --gradient-dark: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            --shadow: 0 10px 30px rgba(139, 95, 191, 0.2);
+            --shadow-dark: 0 15px 40px rgba(139, 95, 191, 0.3);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #f5f7fa 0%, #f8f7ff 100%);
+            position: relative;
+        }
+
+        /* Анимированный фон */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--gradient-light);
+            opacity: 0.1;
+            animation: float 15s ease-in-out infinite;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            left: -150px;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            top: 20%;
+            left: 80%;
+            animation-delay: 3s;
+        }
+
+        .shape-3 {
+            width: 150px;
+            height: 150px;
+            top: 70%;
+            left: 10%;
+            animation-delay: 6s;
+        }
+
+        .shape-4 {
+            width: 250px;
+            height: 250px;
+            top: 60%;
+            left: 70%;
+            animation-delay: 9s;
+        }
+
+        .shape-5 {
+            width: 180px;
+            height: 180px;
+            top: 10%;
+            left: 20%;
+            animation-delay: 12s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            33% { transform: translateY(-20px) rotate(5deg) scale(1.05); }
+            66% { transform: translateY(10px) rotate(-5deg) scale(0.95); }
+        }
+
+        /* Навигация */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            padding: 0.7rem 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 20px;
+            font-weight: bold;
+            transform: rotate(-5deg);
+            transition: var(--transition);
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(0deg) scale(1.1);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .logo:hover .logo-text {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            position: relative;
+            padding: 5px 0;
+            transition: var(--transition);
+        }
+
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--gradient);
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .nav-links a.active:after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-dark);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+
+        .btn-large {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Главный контент */
+        .main-content {
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .hero-text {
+            animation: slideInLeft 1s ease;
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .server-stats {
+            display: flex;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            min-width: 120px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .hero-image {
+            animation: slideInRight 1s ease;
+            position: relative;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .hero-visual {
+            width: 100%;
+            height: 400px;
+            background: var(--gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 5rem;
+            box-shadow: var(--shadow-dark);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .floating-element {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: floatElement 8s ease-in-out infinite;
+        }
+
+        .floating-element i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .el-1 {
+            width: 60px;
+            height: 60px;
+            top: 20%;
+            left: 20%;
+            animation-delay: 0s;
+        }
+
+        .el-2 {
+            width: 40px;
+            height: 40px;
+            top: 60%;
+            left: 70%;
+            animation-delay: 2s;
+        }
+
+        .el-3 {
+            width: 50px;
+            height: 50px;
+            top: 70%;
+            left: 30%;
+            animation-delay: 4s;
+        }
+
+        @keyframes floatElement {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(10deg); }
+            66% { transform: translateY(10px) rotate(-10deg); }
+        }
+
+        .server-info {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            animation: fadeIn 1s ease 0.5s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .server-info h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .ip-address {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .ip-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: var(--light);
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 2px dashed var(--primary-light);
+            flex: 1;
+        }
+
+        .version-info {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-dark);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 2rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .feature-card p {
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* Моды Section */
+        .mods-section {
+            padding: 100px 0;
+            background: var(--light);
+        }
+
+        .mods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .mod-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .mod-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-dark);
+        }
+
+        .mod-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .mod-card h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .mod-card p {
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* Футер */
+        footer {
+            background: var(--dark);
+            color: var(--white);
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+            padding-left: 5px;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+        }
+
+        /* Мобильное меню */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            background: var(--white);
+            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+            padding: 2rem;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mobile-menu-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .mobile-menu-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 1.2rem;
+            padding: 10px 0;
+            display: block;
+            border-bottom: 1px solid var(--light);
+        }
+
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 992px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-text {
+                order: 2;
+            }
+
+            .hero-image {
+                order: 1;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-actions {
+                flex-direction: column;
+            }
+
+            .ip-address {
+                flex-direction: column;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .server-stats {
+                justify-content: center;
+            }
+
+            .stat-item {
+                flex: 1;
+                min-width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Анимированный фон -->
+<div class="bg-animation">
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+    <div class="bg-shape shape-4"></div>
+    <div class="bg-shape shape-5"></div>
+</div>
+
+<!-- Навигация -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-flag"></i>
+            </div>
+            <div class="logo-text">CheckPoint</div>
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="index.html" class="active">Главная</a></li>
+            <li><a href="donate.html">Донат</a></li>
+            <li><a href="download.html">Скачать</a></li>
+            <li><a href="help.html">Помощь</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <a href="donate.html" class="btn btn-primary">
+                <i class="fas fa-shopping-cart"></i> Купить донат
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Мобильное меню -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+<div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-header">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-gamepad"></i>
+            </div>
+            <div class="logo-text">Модовая Анархия</div>
+        </div>
+        <button class="mobile-menu-btn" id="mobileMenuClose">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <ul class="mobile-menu-links">
+        <li><a href="index.html">Главная</a></li>
+        <li><a href="donate.html">Донат</a></li>
+        <li><a href="download.html">Скачать</a></li>
+        <li><a href="help.html">Помощь</a></li>
+    </ul>
+
+    <div class="mobile-menu-actions">
+        <a href="donate.html" class="btn btn-primary btn-block">
+            <i class="fas fa-shopping-cart"></i> Купить донат
+        </a>
+    </div>
+</div>
+
+<!-- Главный контент -->
+<main class="main-content">
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">Модовая Анархия - лучший сервер для игры с модами</h1>
+                <p class="hero-description">Присоединяйтесь к нашему уникальному Minecraft серверу с оптимизированной сборкой модов, высоким онлайном и дружным комьюнити. Откройте для себя новый уровень игры!</p>
+
+                <div class="server-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="onlineCount">247</div>
+                        <div class="stat-label">Игроков онлайн</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">1.20.1</div>
+                        <div class="stat-label">Версия</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Работа сервера</div>
+                    </div>
+                </div>
+
+                <div class="hero-actions">
+                    <a href="download.html" class="btn btn-primary btn-large">
+                        <i class="fas fa-download"></i> Скачать сборку
+                    </a>
+                    <a href="#mods" class="btn btn-outline btn-large">
+                        <i class="fas fa-cubes"></i> Список модов
+                    </a>
+                </div>
+
+                <div class="server-info">
+                    <h3>Подключиться к серверу</h3>
+                    <div class="ip-address">
+                        <div class="ip-text">mc.mod-anarchy.com</div>
+                        <button class="btn btn-primary" id="copyIp">
+                            <i class="fas fa-copy"></i> Копировать
+                        </button>
+                    </div>
+                    <p class="version-info">Версия Minecraft: 1.20.1</p>
+                </div>
+            </div>
+
+            <div class="hero-image">
+                <div class="hero-visual">
+                    <i class="fas fa-cube"></i>
+                    <div class="floating-elements">
+                        <div class="floating-element el-1"><i class="fas fa-dragon"></i></div>
+                        <div class="floating-element el-2"><i class="fas fa-gem"></i></div>
+                        <div class="floating-element el-3"><i class="fas fa-shield-alt"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Почему наш сервер?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Оптимизированная сборка</h3>
+                    <p>Специально подобранные моды и настройки для максимальной производительности даже на слабых ПК</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Активное комьюнити</h3>
+                    <p>Тысячи игроков онлайн каждый день, создающие уникальную атмосферу и интересные события</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Защита от читов</h3>
+                    <p>Мощная античит система и активная модерация обеспечивают честную игру для всех</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-sync"></i>
+                    </div>
+                    <h3>Регулярные обновления</h3>
+                    <p>Постоянное добавление нового контента, исправление багов и улучшение геймплея</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="mods-section" id="mods">
+        <div class="container">
+            <h2 class="section-title">Популярные моды на сервере</h2>
+            <div class="mods-grid">
+                <div class="mod-card">
+                    <div class="mod-icon">
+                        <i class="fas fa-dragon"></i>
+                    </div>
+                    <h3>Ice and Fire</h3>
+                    <p>Добавляет драконов, грифонов и других мифических существ в мир Minecraft</p>
+                </div>
+
+                <div class="mod-card">
+                    <div class="mod-icon">
+                        <i class="fas fa-map"></i>
+                    </div>
+                    <h3>JourneyMap</h3>
+                    <p>Удобная карта мира в реальном времени с возможностью навигации и отметками</p>
+                </div>
+
+                <div class="mod-card">
+                    <div class="mod-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>Create</h3>
+                    <p>Инновационный мод, добавляющий механизмы и кинетические системы для автоматизации</p>
+                </div>
+
+                <div class="mod-card">
+                    <div class="mod-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3>Botania</h3>
+                    <p>Магический мод, основанный на использовании природной магии и цветов</p>
+                </div>
+
+                <div class="mod-card">
+                    <div class="mod-icon">
+                        <i class="fas fa-industry"></i>
+                    </div>
+                    <h3>Immersive Engineering</h3>
+                    <p>Реалистичный технический мод с многоблочными структурами и проводами</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Футер -->
+<footer>
+    <div class="footer-content">
+        <div class="footer-column">
+            <h3>Модовая Анархия</h3>
+            <p>Лучший Minecraft сервер с модами. Присоединяйся к нам и открой новый уровень игры!</p>
+        </div>
+
+        <div class="footer-column">
+            <h3>Навигация</h3>
+            <ul class="footer-links">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="donate.html">Донат</a></li>
+                <li><a href="download.html">Скачать сборку</a></li>
+                <li><a href="help.html">Помощь</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <h3>Сервер</h3>
+            <ul class="footer-links">
+                <li><i class="fas fa-server"></i> mc.mod-anarchy.com</li>
+                <li><i class="fas fa-globe"></i> Версия: 1.20.1</li>
+                <li><i class="fas fa-download"></i> Сборка: Модовая Анархия v2.1</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="copyright">
+        <p>© 2023 Модовая Анархия Minecraft Server. Все права защищены.</p>
+    </div>
+</footer>
+
+<script>
+    // Копирование IP-адреса
+    document.getElementById('copyIp').addEventListener('click', function() {
+        const ipText = 'mc.mod-anarchy.com';
+        navigator.clipboard.writeText(ipText).then(() => {
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-check"></i> Скопировано!';
+            setTimeout(() => {
+                this.innerHTML = originalText;
+            }, 2000);
+        });
+    });
+
+    // Мобильное меню
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenuClose = document.getElementById('mobileMenuClose');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+
+    function openMobileMenu() {
+        mobileMenu.classList.add('active');
+        mobileMenuOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileMenu() {
+        mobileMenu.classList.remove('active');
+        mobileMenuOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    mobileMenuBtn.addEventListener('click', openMobileMenu);
+    mobileMenuClose.addEventListener('click', closeMobileMenu);
+    mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+
+    // Изменение навигации при прокрутке
+    window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // Анимация появления элементов при прокрутке
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    // Наблюдаем за элементами с анимацией
+    document.querySelectorAll('.feature-card, .mod-card').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        observer.observe(el);
+    });
+
+    // Online counter simulation
+    function updateOnlineCount() {
+        const counter = document.getElementById('onlineCount');
+        if (counter) {
+            // Simulate realistic online count changes
+            const baseCount = 247;
+            const variation = Math.floor(Math.random() * 30) - 15; // -15 to +15
+            const newCount = Math.max(100, baseCount + variation);
+            counter.textContent = newCount;
+        }
+    }
+
+    // Update online count every 30 seconds
+    setInterval(updateOnlineCount, 30000);
+
+    // Initial update
+    updateOnlineCount();
+</script>
+</body>
+</html>
